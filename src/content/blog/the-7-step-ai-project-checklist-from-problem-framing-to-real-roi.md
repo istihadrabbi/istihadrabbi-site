@@ -3,7 +3,7 @@ title: "The 7-Step AI Project Checklist: From Problem Framing to Real ROI"
 date: "2026-02-18"
 description: "Most AI projects fail because of unclear goals and weak execution\u2014not because of the model. This checklist helps you build AI initiatives that deliver measurable ROI."
 tags: ["Applied Research"]
-image: "/images/blog/ChatGPT-Image-Feb-18-2026-11_07_02-PM.png"
+image: "/images/blog/the-7-step-ai-project-checklist-from-problem-framing-to-real-roi.webp"
 ---
 
 AI projects often start with excitement and end with disappointment. The reason is usually not the algorithm. It’s the lack of a disciplined delivery process. Use this 7-step checklist to build AI that actually moves business outcomes.

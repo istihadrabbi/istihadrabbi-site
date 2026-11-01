@@ -3,7 +3,7 @@ title: "From AI to Decision Intelligence: Why 2026 Is the Year of Smarter Busine
 date: "2026-02-18"
 description: "AI is no longer just automation\u2014it\u2019s reshaping how leaders make decisions. Here\u2019s what Decision Intelligence means, why it matters now, and how to start without overcomplicating things"
 tags: ["AI Strategy"]
-image: "/images/blog/ChatGPT-Image-Feb-18-2026-10_57_30-PM.png"
+image: "/images/blog/from-ai-to-decision-intelligence-why-2026-is-the-year-of-smarter-business-decisions.webp"
 ---
 
 In fast-moving markets, the competitive edge is simple: make better decisions faster. Traditional business analytics helped organizations understand **what happened** (descriptive) and **why it happened** (diagnostic). With AI, we can also estimate **what will happen** (predictive) and recommend **what to do next** (prescriptive). When those pieces are connected to real-world processes, you get **Decision Intelligence**.
