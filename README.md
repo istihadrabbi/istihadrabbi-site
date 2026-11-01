@@ -13,3 +13,13 @@ Personal resume site for Istihad Rabbi, built with Astro and hosted on Netlify.
 - `npm install`
 - `npm run dev` to preview locally
 - `npm run build` to build into `dist/`
+
+## Job-tailored resumes
+
+Tailored copies are built from a copy of `src/data/resume.yaml` and are never published on the site:
+
+```
+node scripts/build-resume.mjs --in path/to/tailored.yaml --out path/to/folder
+```
+
+Tailoring may only reorder, emphasize and reword what is already in the master file. The script refuses to build if the tailored copy contains any number that is not in the master resume.

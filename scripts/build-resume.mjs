@@ -12,10 +12,29 @@ import {
 } from 'docx';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const r = YAML.parse(fs.readFileSync(path.join(root, 'src/data/resume.yaml'), 'utf8'));
-const outDir = path.join(root, 'public/resume');
+
+// Optional flags for job-tailored copies (never touch the public site files):
+//   node scripts/build-resume.mjs --in path/to/tailored.yaml --out path/to/folder
+const arg = (k) => { const i = process.argv.indexOf(k); return i > -1 ? process.argv[i + 1] : null; };
+const masterPath = path.join(root, 'src/data/resume.yaml');
+const inPath = arg('--in') ? path.resolve(arg('--in')) : masterPath;
+const tailored = inPath !== masterPath;
+const r = YAML.parse(fs.readFileSync(inPath, 'utf8'));
+const outDir = arg('--out') ? path.resolve(arg('--out')) : path.join(root, 'public/resume');
 fs.mkdirSync(outDir, { recursive: true });
 const base = `${r.name.replace(/\s+/g, '-')}-${r.title.replace(/\s+/g, '-')}-Resume`;
+
+// Honesty check for tailored copies: every number in the tailored resume
+// (percentages, money, counts, years) must already exist in the master file.
+if (tailored) {
+  const nums = (t) => new Set((t.match(/\$?\d[\d,.]*[%K+]*/g) || []).map((n) => n.replace(/[.,]$/, '')));
+  const master = nums(fs.readFileSync(masterPath, 'utf8'));
+  const extra = [...nums(fs.readFileSync(inPath, 'utf8'))].filter((n) => !master.has(n));
+  if (extra.length) {
+    console.error(`Stopped: tailored resume has numbers not in the master resume: ${extra.join(', ')}`);
+    process.exit(1);
+  }
+}
 
 const strip = (u) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 const contact = [r.location, r.phone, r.email, strip(r.linkedin), strip(r.website)];
@@ -183,7 +202,9 @@ async function buildDocx() {
 
 buildPdf();
 await buildDocx();
-// Expose file names to the site.
-fs.writeFileSync(path.join(root, 'src/data/resume-files.json'),
-  JSON.stringify({ pdf: `/resume/${base}.pdf`, docx: `/resume/${base}.docx` }, null, 2));
-console.log(`Resume built: ${base}.pdf and .docx`);
+// Expose file names to the site (master build only).
+if (!tailored) {
+  fs.writeFileSync(path.join(root, 'src/data/resume-files.json'),
+    JSON.stringify({ pdf: `/resume/${base}.pdf`, docx: `/resume/${base}.docx` }, null, 2));
+}
+console.log(`Resume built: ${path.join(outDir, base)}.pdf and .docx`);
