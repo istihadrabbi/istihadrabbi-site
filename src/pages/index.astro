@@ -1,0 +1,313 @@
+---
+import fs from 'node:fs';
+import Base from '../layouts/Base.astro';
+import DownloadResume from '../components/DownloadResume.astro';
+import r from '../data/resume';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', (p) => !p.data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+const hasPhoto = fs.existsSync('public/images/profile.webp');
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+// Results grid (website only)
+const results = [
+  { value: '60%', label: 'Website traffic growth', note: 'Organic and paid traffic through SEO and ad campaigns' },
+  { value: '70%', label: 'Social audience growth', note: 'Across Facebook, Instagram and LinkedIn' },
+  { value: '35%', label: 'Conversion rate uplift', note: 'Landing page optimization and A/B testing' },
+  { value: '25%', label: 'Lower cost per click', note: 'While keeping ad quality and reach' },
+  { value: '30%', label: 'ROAS improvement', note: 'Smarter budget allocation across channels' },
+  { value: '40%', label: 'ROI growth', note: 'Measurable return on marketing investment' },
+];
+const tools = ['Google Analytics 4', 'Google Ads', 'Meta Ads Manager', 'Google Tag Manager', 'SEMrush', 'Looker Studio', 'Power BI', 'Tableau'];
+---
+<Base>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        {r.available && <span class="status"><i></i> Available for new roles</span>}
+        <h1>Turning <span class="grad">ad spend</span> into measurable growth.</h1>
+        <p class="lead">{r.title} with 4+ years running Google Ads, Meta Ads, SEO and GA4 analytics. I manage budgets of $15K+ a month and report results in numbers, not opinions.</p>
+        <div class="cta">
+          <DownloadResume />
+          <a class="btn btn-ghost" href="#contact">Let's talk</a>
+        </div>
+        <p class="ats-note">ATS-friendly resume in PDF or Word, always up to date.</p>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        {hasPhoto && <img class="photo" src="/images/profile.webp" alt="" width="500" height="500" />}
+        <div class="dash card">
+          <div class="dash-top"><span>Campaign performance</span><span class="pill">Highlights</span></div>
+          <div class="dash-kpis">
+            <div><small>ROAS</small><b>+30%</b></div>
+            <div><small>CPC</small><b class="down">−25%</b></div>
+            <div><small>Traffic</small><b>+60%</b></div>
+          </div>
+          <svg viewBox="0 0 300 110" class="spark">
+            <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4f46e5" stop-opacity=".28"/><stop offset="1" stop-color="#4f46e5" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0 95 L40 88 L80 90 L120 72 L160 66 L200 48 L240 38 L300 14 L300 110 L0 110 Z" fill="url(#g)"/>
+            <path d="M0 95 L40 88 L80 90 L120 72 L160 66 L200 48 L240 38 L300 14" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <ul class="kpis">
+        {r.highlights.map((h: any) => <li><b>{h.value}</b><span>{h.label}</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="container about">
+      <div>
+        <span class="eyebrow">About</span>
+        <h2>Marketer by trade, analyst by training.</h2>
+      </div>
+      <div>
+        <p class="lead">{r.summary}</p>
+        <p>I've worked across education, B2B and service businesses in the US, Japan and Bangladesh. My finance background means I treat every campaign like an investment: set a target, measure the return, and move budget to what works.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="section soft" id="results">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Results</span>
+        <h2>Numbers I've moved</h2>
+        <p class="lead">Measured outcomes from my campaigns and projects.</p>
+      </div>
+      <div class="grid grid-3">
+        {results.map((x) => (
+          <div class="card result"><b>{x.value}</b><h3>{x.label}</h3><p class="muted">{x.note}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE STUDIES -->
+  <section class="section" id="work">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Case studies</span>
+        <h2>Selected work</h2>
+      </div>
+      <div class="grid grid-2">
+        {r.projects.map((p: any) => (
+          <article class="card case">
+            <div class="case-head">
+              <span class="muted small">{p.client} · {p.start} – {p.end}</span>
+              <span class="result-pill">{p.result}</span>
+            </div>
+            <h3>{p.name}</h3>
+            <p><strong>Challenge:</strong> {p.challenge}</p>
+            <ul>{p.bullets.map((b: string) => <li>{b}</li>)}</ul>
+            <div>{p.tags.map((t: string) => <span class="chip">{t}</span>)}</div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section soft" id="experience">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Experience</span>
+        <h2>Where I've worked</h2>
+      </div>
+      <ol class="timeline" id="resume">
+        {r.experience.map((e: any) => (
+          <li>
+            <div class="when">{e.start} – {e.end}</div>
+            <div class="card">
+              <h3>{e.role}</h3>
+              <p class="muted">{e.company} · {e.location}</p>
+              <ul>{e.bullets.map((b: string) => <li>{b}</li>)}</ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div class="edu grid grid-3">
+        {r.education.map((e: any) => (
+          <div class="card"><span class="muted small">{e.year}</span><h3>{e.degree}</h3><p class="muted">{e.school}{e.gpa && ` · GPA ${e.gpa}`}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Skills</span>
+        <h2>Toolkit</h2>
+      </div>
+      <div class="grid grid-3">
+        {r.skills.map((s: any) => (
+          <div class="card"><h3>{s.group}</h3><div>{s.items.map((i: string) => <span class="chip">{i}</span>)}</div></div>
+        ))}
+      </div>
+      <div class="tools">
+        <span class="muted">Analytics tools I use daily:</span>
+        {tools.map((t) => <strong>{t}</strong>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- CREDENTIALS -->
+  <section class="section soft" id="credentials">
+    <div class="container grid grid-2">
+      <div>
+        <span class="eyebrow">Certifications</span>
+        <h2>Credentials</h2>
+        <ul class="list">
+          {r.certifications.map((c: any) => <li><strong>{c.name}</strong><span class="muted">{c.issuer}</span></li>)}
+          {r.memberships.map((m: any) => <li><strong>{m.name}</strong><span class="muted">{m.detail}</span></li>)}
+        </ul>
+      </div>
+      <div>
+        <span class="eyebrow">Research</span>
+        <h2>Publications</h2>
+        <ul class="list">
+          {r.publications.map((p: any) => <li><strong>{p.title}</strong><span class="muted">{p.type} · {p.venue}</span></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section" id="testimonials">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Recommendations</span>
+        <h2>What colleagues say</h2>
+      </div>
+      <div class="grid grid-3">
+        {r.testimonials.map((t: any) => (
+          <figure class="card quote">
+            <blockquote>“{t.quote}”</blockquote>
+            <figcaption><strong>{t.name}</strong><span class="muted">{t.role}</span><span class="muted small">{t.relation} · {t.date}</span></figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  {posts.length > 0 && (
+    <section class="section soft" id="blog">
+      <div class="container">
+        <div class="section-head row">
+          <div><span class="eyebrow">Insights</span><h2>From the blog</h2></div>
+          <a href="/blog/" class="btn btn-ghost">All articles</a>
+        </div>
+        <div class="grid grid-3">
+          {posts.map((p) => (
+            <a class="card post" href={`/blog/${p.id}/`}>
+              {p.data.image && fs.existsSync(`public${p.data.image}`) && <img src={p.data.image} alt="" loading="lazy" />}
+              <span class="muted small">{fmt(p.data.date)}{p.data.tags[0] && ` · ${p.data.tags[0]}`}</span>
+              <h3>{p.data.title}</h3>
+              <p class="muted">{p.data.description}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CONTACT -->
+  <section class="section contact" id="contact">
+    <div class="container grid grid-2">
+      <div>
+        <span class="eyebrow light">Contact</span>
+        <h2>Hiring for a marketing role?</h2>
+        <p class="lead light">Send a message or grab my resume. I usually reply within one business day.</p>
+        <ul class="contact-list">
+          <li><span>Email</span><a href={`mailto:${r.email}`}>{r.email}</a></li>
+          <li><span>Phone</span><a href={`tel:${r.phone.replace(/[^\d+]/g, '')}`}>{r.phone}</a></li>
+          <li><span>Location</span>{r.location}</li>
+          <li><span>LinkedIn</span><a href={r.linkedin} target="_blank" rel="noopener">linkedin.com/in/istihadrabbi</a></li>
+        </ul>
+        <DownloadResume variant="ghost" />
+      </div>
+      <form class="card" name="contact" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="company_site">
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="hidden"><label>Leave this empty <input name="company_site" /></label></p>
+        <div class="field"><label for="c-name">Name</label><input id="c-name" name="name" required autocomplete="name" /></div>
+        <div class="field"><label for="c-email">Email</label><input id="c-email" type="email" name="email" required autocomplete="email" /></div>
+        <div class="field"><label for="c-company">Company (optional)</label><input id="c-company" name="company" autocomplete="organization" /></div>
+        <div class="field"><label for="c-msg">Message</label><textarea id="c-msg" name="message" rows="5" required></textarea></div>
+        <button class="btn btn-primary" type="submit">Send message</button>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding: 72px 0 40px; background: radial-gradient(1200px 500px at 85% -10%, rgba(6,182,212,.14), transparent 60%), radial-gradient(900px 500px at -10% 10%, rgba(79,70,229,.12), transparent 60%); }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
+  .status { display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; font-weight: 600; color: var(--good); background: #ecfdf5; border: 1px solid #a7f3d0; padding: .35rem .8rem; border-radius: 999px; margin-bottom: 1.2rem; }
+  .status i { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px rgba(5,150,105,.2); }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 1.6rem; }
+  .ats-note { font-size: .85rem; color: var(--muted); margin-top: .9rem; }
+  .hero-visual { position: relative; }
+  .photo { width: 78%; aspect-ratio: 1; object-fit: cover; border-radius: 24px; margin-left: auto; box-shadow: var(--shadow); }
+  .photo + .dash { position: absolute; left: 0; bottom: -24px; width: 72%; }
+  .dash { padding: 20px; }
+  .dash-top { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: .9rem; }
+  .pill { font-size: .72rem; background: var(--bg-soft); border: 1px solid var(--line); padding: .2rem .55rem; border-radius: 999px; color: var(--muted); font-weight: 500; }
+  .dash-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0 8px; }
+  .dash-kpis small { display: block; color: var(--muted); font-size: .75rem; }
+  .dash-kpis b { font-size: 1.35rem; font-family: var(--display); color: var(--good); }
+  .spark { width: 100%; height: auto; }
+  .kpis { list-style: none; padding: 0; margin: 56px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .kpis li { background: #fff; padding: 22px; }
+  .kpis b { display: block; font-family: var(--display); font-size: 2rem; font-weight: 800; }
+  .kpis span { color: var(--muted); font-size: .9rem; }
+  .about { display: grid; grid-template-columns: .8fr 1.2fr; gap: 48px; }
+  .result b { font-family: var(--display); font-size: 2.4rem; font-weight: 800; color: var(--brand); display: block; line-height: 1.1; margin-bottom: .3rem; }
+  .result p { margin: 0; font-size: .92rem; }
+  .case-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: .6rem; flex-wrap: wrap; }
+  .result-pill { background: #ecfdf5; color: var(--good); font-weight: 700; font-size: .85rem; padding: .25rem .7rem; border-radius: 999px; }
+  .case ul, .timeline ul { padding-left: 1.1rem; color: var(--ink-2); }
+  .case li, .timeline li li { margin-bottom: .35rem; }
+  .small { font-size: .82rem; }
+  .timeline { list-style: none; padding: 0; margin: 0 0 32px; }
+  .timeline > li { display: grid; grid-template-columns: 170px 1fr; gap: 24px; margin-bottom: 20px; }
+  .when { font-weight: 600; color: var(--muted); padding-top: 26px; font-size: .92rem; }
+  .timeline p { margin-bottom: .6rem; }
+  .tools { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
+  .tools strong { font-weight: 600; color: var(--ink-2); }
+  .list { list-style: none; padding: 0; margin: 0; }
+  .list li { padding: 14px 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
+  .quote { margin: 0; display: flex; flex-direction: column; justify-content: space-between; }
+  .quote blockquote { margin: 0 0 1.2rem; color: var(--ink-2); }
+  .quote figcaption { display: flex; flex-direction: column; }
+  .row { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
+  .post { color: var(--ink); text-decoration: none !important; display: flex; flex-direction: column; transition: transform .15s; }
+  .post:hover { transform: translateY(-3px); }
+  .post img { border-radius: 10px; margin-bottom: 14px; aspect-ratio: 16/9; object-fit: cover; }
+  .post h3 { margin-top: .4rem; }
+  .contact { background: linear-gradient(135deg, #1e1b4b, #0f172a); color: #fff; }
+  .contact h2 { color: #fff; }
+  .light { color: #a5b4fc !important; }
+  .lead.light { color: #cbd5e1 !important; }
+  .contact-list { list-style: none; padding: 0; margin: 24px 0 28px; }
+  .contact-list li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.12); display: flex; gap: 16px; }
+  .contact-list span { width: 90px; color: #94a3b8; flex: none; }
+  .contact-list a { color: #fff; }
+  .contact form { color: var(--ink); }
+  @media (max-width: 900px) {
+    .hero-grid, .about { grid-template-columns: 1fr; }
+    .hero-visual { max-width: 460px; }
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .timeline > li { grid-template-columns: 1fr; gap: 6px; }
+    .when { padding-top: 0; }
+  }
+</style>

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.istihadrabbi.com/sitemap-index.xml

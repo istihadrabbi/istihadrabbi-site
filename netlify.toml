@@ -1,0 +1,46 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Old WordPress addresses → new pages
+[[redirects]]
+  from = "/resume-cv"
+  to = "/#resume"
+  status = 301
+[[redirects]]
+  from = "/contact"
+  to = "/#contact"
+  status = 301
+[[redirects]]
+  from = "/about"
+  to = "/#about"
+  status = 301
+[[redirects]]
+  from = "/wp-content/uploads/2026/01/Istihad-Rabbi-Resume.pdf"
+  to = "/resume/Istihad-Rabbi-Digital-Marketing-Analyst-Resume.pdf"
+  status = 301
+# Old blog post addresses keep their search ranking
+[[redirects]]
+  from = "/the-7-step-ai-project-checklist-from-problem-framing-to-real-roi/*"
+  to = "/blog/the-7-step-ai-project-checklist-from-problem-framing-to-real-roi/"
+  status = 301
+[[redirects]]
+  from = "/kpi-vs-okr-the-data-driven-growth-framework-most-teams-get-wrong/*"
+  to = "/blog/kpi-vs-okr-the-data-driven-growth-framework-most-teams-get-wrong/"
+  status = 301
+[[redirects]]
+  from = "/from-ai-to-decision-intelligence-why-2026-is-the-year-of-smarter-business-decisions/*"
+  to = "/blog/from-ai-to-decision-intelligence-why-2026-is-the-year-of-smarter-business-decisions/"
+  status = 301
+[[redirects]]
+  from = "/marketing-roi-explained-why-it-matters/*"
+  to = "/blog/marketing-roi-explained-why-it-matters/"
+  status = 301
+
+[[headers]]
+  for = "/resume/*.docx"
+  [headers.values]
+    Content-Disposition = "attachment"

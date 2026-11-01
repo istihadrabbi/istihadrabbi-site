@@ -1,0 +1,39 @@
+---
+import fs from 'node:fs';
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog', (p) => !p.data.draft)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+---
+<Base title="Blog | Istihad Rabbi" description="Insights on digital marketing, analytics, marketing ROI and growth strategy.">
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Insights</span>
+      <h1>Blog</h1>
+      <p class="lead">Practical notes on digital marketing, analytics and data-driven growth.</p>
+      <div class="list">
+        {posts.map((p) => (
+          <a class="item" href={`/blog/${p.id}/`}>
+            {p.data.image && fs.existsSync(`public${p.data.image}`) ? <img src={p.data.image} alt="" loading="lazy" /> : <div class="ph" />}
+            <div>
+              <span class="muted small">{fmt(p.data.date)}{p.data.tags[0] && ` · ${p.data.tags[0]}`}</span>
+              <h2>{p.data.title}</h2>
+              <p class="muted">{p.data.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .list { margin-top: 40px; display: grid; gap: 22px; }
+  .item { display: grid; grid-template-columns: 260px 1fr; gap: 26px; align-items: center; color: var(--ink); text-decoration: none !important; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); transition: box-shadow .15s; }
+  .item:hover { box-shadow: var(--shadow); }
+  .item img, .ph { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 10px; }
+  .ph { background: linear-gradient(135deg, #e0e7ff, #cffafe); }
+  .item h2 { font-size: 1.35rem; margin: .3rem 0 .4rem; }
+  .item p { margin: 0; }
+  .small { font-size: .82rem; }
+  @media (max-width: 700px) { .item { grid-template-columns: 1fr; } }
+</style>

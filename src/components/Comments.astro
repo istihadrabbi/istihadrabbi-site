@@ -1,0 +1,20 @@
+---
+// Blog comments powered by Giscus (GitHub Discussions). Free, no server, spam-resistant.
+import { giscus } from '../site.config';
+const { term } = Astro.props;
+const ready = giscus.repoId && giscus.categoryId;
+---
+<section class="comments" id="comments">
+  <h2>Comments</h2>
+  {ready ? (
+    <script src="https://giscus.app/client.js"
+      data-repo={giscus.repo} data-repo-id={giscus.repoId}
+      data-category={giscus.category} data-category-id={giscus.categoryId}
+      data-mapping="specific" data-term={term} data-strict="1"
+      data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top"
+      data-theme="light" data-lang="en" data-loading="lazy" crossorigin="anonymous" async is:inline></script>
+  ) : (
+    <p class="muted">Comments are coming soon.</p>
+  )}
+</section>
+<style>.comments { margin-top: 56px; } .comments h2 { font-size: 1.4rem; }</style>

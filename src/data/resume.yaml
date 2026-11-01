@@ -1,0 +1,182 @@
+# Master resume file.
+# The website, the PDF download and the Word download are all built from this file.
+# Edit here, publish, and all three update together.
+
+name: Istihad Rabbi
+title: Digital Marketing Analyst
+tagline: Paid media, SEO and analytics that turn ad spend into measurable growth.
+location: Los Angeles, CA
+email: istihadrabbi@outlook.com
+phone: "(213) 645-0349"
+website: https://www.istihadrabbi.com
+linkedin: https://www.linkedin.com/in/istihadrabbi/
+available: true
+
+summary: >-
+  Results-driven Digital Marketing and Data Analyst with 4+ years of experience
+  managing $15K+ monthly Google Ads and Meta Ads budgets, growing website traffic 60%
+  and improving ROAS 30%. Skilled in SEO/SEM, GA4, Google Tag Manager and marketing
+  analytics, backed by dual MBAs in Business Analytics and Finance.
+
+# Headline numbers shown at the top of the website.
+highlights:
+  - value: "4+"
+    label: Years experience
+  - value: "$15K+"
+    label: Monthly ad budget managed
+  - value: "60%"
+    label: Website traffic growth
+  - value: "30%"
+    label: ROAS improvement
+
+skills:
+  - group: Digital Marketing
+    items: [Google Ads, Meta Ads Manager, GA4, Google Tag Manager, SEMrush, Hootsuite, Sprout Social]
+  - group: SEO/SEM
+    items: [Keyword Research, On-Page SEO, Technical SEO, Competitor Analysis, Content Strategy]
+  - group: Analytics & Data
+    items: [Excel (Advanced), Power BI, Tableau, Google Looker Studio, SQL (Basics), Data Modeling]
+  - group: Core Competencies
+    items: [Campaign Optimization, Lead Generation, Conversion Rate Optimization, A/B Testing, Cross-Channel Planning, Stakeholder Communication]
+  - group: Finance & Business
+    items: [Financial Analysis, Budget Management, Forecasting, ROI Analysis, SAP, GAAP Compliance]
+  - group: Tools & Platforms
+    items: [CRM Systems, Marketing Automation, Trello, Jira, Adobe Photoshop, Canva]
+
+experience:
+  - role: Assistant Digital Marketing Specialist
+    company: International American University
+    location: Los Angeles, CA
+    start: Jun 2025
+    end: Oct 2025
+    bullets:
+      - Increased follower base 42% and engagement rates 35% through multi-platform social campaigns.
+      - Produced 120+ posts, blogs and visuals per month, expanding global content reach 28%.
+      - Delivered 15+ quarterly performance reports that drove a 30% improvement in organic growth.
+  - role: Assistant Digital Media
+    company: International American University
+    location: Los Angeles, CA
+    start: Sep 2023
+    end: Jun 2025
+    bullets:
+      - Managed a $15K+ monthly Google Ads and Meta Ads budget, cutting CPC 25% and improving ROAS 30%.
+      - Grew website traffic 60% and social media audience 70% through SEO and content strategy.
+      - Achieved 40% ROI growth and 35% campaign optimization gains leading a 3-person team.
+  - role: Accounts Executive
+    company: AJM Constructions & Supplier
+    location: Bangladesh
+    start: Apr 2022
+    end: Apr 2023
+    bullets:
+      - Analyzed SAP financial transactions for GAAP compliance, improving accuracy 30%.
+      - Optimized cash flow 25% through accounts payable and receivable analysis.
+      - Reduced data entry errors 20% through automation initiatives.
+  - role: QC Document Controller
+    company: IHI Corporation
+    location: Japan
+    start: May 2021
+    end: Mar 2022
+    bullets:
+      - Cut project delays 44% through timeline analysis and reporting.
+      - Reduced documentation revision errors 35% with a version control system.
+      - Improved data accuracy 25% with automated Excel tracking tools.
+  - role: Assistant Accounts
+    company: MAS Intimates Bangladesh Private Limited
+    location: Bangladesh
+    start: Sep 2019
+    end: Mar 2021
+    bullets:
+      - Improved transaction traceability 40% across finance processes by supporting SAP integration.
+      - Reduced manual entry errors 35% by streamlining workflows with Excel functions and pivot tables.
+      - Improved audit readiness 30% by analyzing vendor invoice data and optimizing payment cycles.
+
+projects:
+  - name: "Phlebotomy Program Enrollment: Google Ads Campaign"
+    client: LA Vocational Institute, Los Angeles, CA
+    start: Sep 2024
+    end: Apr 2025
+    result: "+60% inquiries in 6 months"
+    challenge: Grow enrollment inquiries for a phlebotomy program without raising ad spend.
+    bullets:
+      - Grew program inquiries 60% within 6 months with targeted Google Ads campaigns.
+      - Reduced cost per acquisition 25% by optimizing keywords and benchmarking competitors.
+      - Led a cross-functional team of 4 and delivered reporting insights to leadership.
+    tags: [Google Ads, PPC, Lead Generation, Campaign Optimization]
+  - name: Strategic Social Media Marketing Funnel
+    client: Orange County University, California
+    start: Jan 2025
+    end: Jun 2025
+    result: "+300% social engagement"
+    challenge: Raise brand visibility and support admissions goals on Facebook and Instagram.
+    bullets:
+      - Achieved 300% engagement growth on Facebook and Instagram, boosting brand visibility.
+      - Improved content performance 40% using Meta Business Suite analytics to tune posting strategy.
+      - Built monthly content calendars aligned with admissions goals and managed a team of 3 creatives.
+    tags: [Social Media, Meta Ads, Content Strategy, Team Leadership]
+
+education:
+  - degree: MBA in Business Analytics
+    school: International American University
+    year: "2025"
+    gpa: "3.67"
+  - degree: MBA in Finance
+    school: East Delta University
+    year: "2021"
+    gpa: "3.14"
+  - degree: BBA in Finance
+    school: International American University
+    year: "2020"
+    gpa: "3.90"
+
+certifications:
+  - name: Certified Digital Marketer
+    issuer: Creative IT Institute
+  - name: How to Incorporate PPC Into Your Marketing Strategy
+    issuer: Semrush
+  - name: "Keyword Research: A Step-by-Step Guide"
+    issuer: Creative IT Institute
+  - name: The Data Scientist's Toolbox
+    issuer: Johns Hopkins University
+  - name: Project Management Foundations (incl. Ethics, Requirements)
+    issuer: PMI
+  - name: "Photoshop for Designers: Working with Shapes"
+    issuer: LinkedIn Learning
+
+publications:
+  - title: "Exploring the Impacts of Automation on Employment: A Qualitative Study on Machine Learning and the Future of Work"
+    venue: International Journal for Research in Engineering Application & Management
+    type: Journal article
+  - title: "Why Do Banks Fail? Examining Systemic Risks and Managerial Inefficiencies in Financial Institutions"
+    venue: Aim International Journal Publisher
+    type: Journal article
+  - title: "The Role of Artificial Intelligence in Education: Transforming Administration and Leadership"
+    venue: National Conference on Sustainable Business Strategies for a Shared Future, Indian Institute of Public Administration
+    type: Conference paper
+
+memberships:
+  - name: International Institute of Business Analysis (IIBA)
+    detail: Certified Member
+
+testimonials:
+  - name: Susan Tan
+    role: Digital Experience Designer
+    relation: Managed Istihad directly
+    date: Dec 2024
+    quote: >-
+      His expertise in graphic design, SEO, and photography helped enhance our digital presence,
+      and his SEO efforts directly contributed to increased traffic on our website and social media profiles.
+      I highly recommend Istihad to anyone seeking a talented and reliable digital media and marketing professional!
+  - name: Leslie Bauer
+    role: International Student Advisor / Designated School Official
+    relation: Worked with Istihad on a different team
+    date: Oct 2024
+    quote: >-
+      My first impression was that he is well-spoken, professional and focused. As Assistant/Coordinator Digital Media,
+      he represents International American University well. Anyone who works with him or for him would have a great work experience!
+  - name: Md Emdadul Haque
+    role: HSE Practitioner
+    relation: Worked with Istihad on the same team
+    date: Jul 2022
+    quote: >-
+      I found him well-groomed in his soft skills as well as a dedicated person towards his job.
+      Besides being a hardworking person, he can deliver his assigned job on time.

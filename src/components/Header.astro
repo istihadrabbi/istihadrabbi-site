@@ -1,0 +1,56 @@
+---
+import DownloadResume from './DownloadResume.astro';
+import r from '../data/resume';
+const links = [
+  ['Results', '/#results'], ['Case Studies', '/#work'], ['Experience', '/#experience'],
+  ['Skills', '/#skills'], ['Blog', '/blog/'], ['Contact', '/#contact'],
+];
+---
+<header class="site-header">
+  <div class="container bar">
+    <a href="/" class="logo" aria-label="Home">
+      <span class="mark">IR</span><span class="name">{r.name}</span>
+    </a>
+    <nav aria-label="Main">
+      <ul class="nav" data-nav>
+        {links.map(([t, h]) => <li><a href={h}>{t}</a></li>)}
+      </ul>
+    </nav>
+    <div class="actions">
+      <div class="desk-dl"><DownloadResume label="Resume" align="right" /></div>
+      <button class="menu-btn" aria-label="Open menu" aria-expanded="false" data-menu>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.88); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 700; text-decoration: none !important; }
+  .mark { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-family: var(--display); font-weight: 800; font-size: .9rem; background: linear-gradient(135deg, var(--brand), var(--brand-2)); }
+  .nav { list-style: none; display: flex; gap: 26px; margin: 0; padding: 0; }
+  .nav a { color: var(--ink-2); font-weight: 500; font-size: .95rem; }
+  .nav a:hover { color: var(--brand); text-decoration: none; }
+  .actions { display: flex; align-items: center; gap: 8px; }
+  .actions :global(.btn) { padding: .55rem 1rem; font-size: .9rem; }
+  .menu-btn { display: none; background: none; border: 0; color: var(--ink); cursor: pointer; padding: 6px; }
+  @media (max-width: 900px) {
+    .menu-btn { display: block; }
+    .nav { display: none; position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; gap: 0; background: #fff; border-bottom: 1px solid var(--line); padding: 8px 20px 16px; }
+    .nav.open { display: flex; }
+    .nav a { display: block; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  }
+  @media (max-width: 420px) { .name { display: none; } }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-menu]');
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+  btn?.addEventListener('click', () => {
+    const open = nav!.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+  });
+  nav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => nav.classList.remove('open')));
+</script>

@@ -1,0 +1,21 @@
+---
+import r from '../data/resume';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container row">
+    <p>© {year} {r.name}. {r.title}, {r.location}.</p>
+    <p class="links">
+      <a href={`mailto:${r.email}`}>Email</a>
+      <a href={r.linkedin} rel="noopener" target="_blank">LinkedIn</a>
+      <a href="/blog/">Blog</a>
+    </p>
+  </div>
+</footer>
+<style>
+  .footer { background: var(--ink); color: #cbd5e1; padding: 28px 0; font-size: .9rem; }
+  .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .footer p { margin: 0; }
+  .links { display: flex; gap: 18px; }
+  .footer a { color: #fff; }
+</style>
