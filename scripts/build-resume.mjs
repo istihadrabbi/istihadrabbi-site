@@ -29,7 +29,7 @@ const base = `${r.name.replace(/\s+/g, '-')}-${r.title.replace(/\s+/g, '-')}-Res
 if (tailored) {
   const nums = (t) => new Set((t.match(/\$?\d[\d,.]*[%K+]*/g) || []).map((n) => n.replace(/[.,]$/, '')));
   const master = nums(fs.readFileSync(masterPath, 'utf8'));
-  const extra = [...nums(fs.readFileSync(inPath, 'utf8'))].filter((n) => !master.has(n));
+  const extra = [...nums(JSON.stringify(r))].filter((n) => !master.has(n));
   if (extra.length) {
     console.error(`Stopped: tailored resume has numbers not in the master resume: ${extra.join(', ')}`);
     process.exit(1);
