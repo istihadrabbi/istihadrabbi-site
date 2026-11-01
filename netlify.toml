@@ -44,3 +44,14 @@
   for = "/resume/*.docx"
   [headers.values]
     Content-Disposition = "attachment"
+
+# Private resume tailor (see netlify/edge-functions/tailor.js): never indexed or cached.
+[[headers]]
+  for = "/tailor/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["pdfkit"]

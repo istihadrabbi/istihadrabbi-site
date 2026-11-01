@@ -26,6 +26,14 @@ Tailoring may only reorder, emphasize and reword what is already in the master f
 
 Keyword target: aim for a natural, genuine match of about 70–75% of the job description's keywords. Do not copy every keyword or mirror the posting's wording.
 
-Planned private tailor page (not built yet): must never be public. Unlinked from the site, password checked on the server (not in the browser), `noindex`, and blocked in robots.txt.
+### Private tailor page (`/tailor`)
+
+Must never be public: unlinked from the site, password checked on the server by `netlify/edge-functions/tailor.js`, `noindex`, excluded from the sitemap and blocked in robots.txt. No usage cap.
+
+- `netlify/edge-functions/tailor.js`: password gate for everything under `/tailor`, reads job links, asks Gemini, runs the honesty checks.
+- `netlify/functions/tailor-build.mjs`: re-checks the approved resume on the server and builds the PDF and Word files.
+- `scripts/resume-checks.mjs`: the honesty checks (no new numbers, jobs, dates, or unconfirmed skills).
+- Netlify environment variables: `TAILOR_PASSWORD`, `GEMINI_API_KEY` (free tier from Google AI Studio), optional `GEMINI_MODEL`.
+- Contact details are never sent to the AI; they are added back when the files are built.
 
 Each tailored resume also reports whether the company is enrolled in E-Verify, using only the official search at e-verify.gov/e-verify-employer-search. If it can't be read, say so; never guess.

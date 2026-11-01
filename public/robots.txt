@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+Disallow: /tailor
 Sitemap: https://www.istihadrabbi.com/sitemap-index.xml
