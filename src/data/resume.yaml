@@ -129,18 +129,19 @@ education:
     gpa: "3.90"
 
 certifications:
-  - name: Certified Digital Marketer
-    issuer: Creative IT Institute
-  - name: How to Incorporate PPC Into Your Marketing Strategy
-    issuer: Semrush
-  - name: "Keyword Research: A Step-by-Step Guide"
-    issuer: Creative IT Institute
-  - name: The Data Scientist's Toolbox
-    issuer: Johns Hopkins University
-  - name: Project Management Foundations (incl. Ethics, Requirements)
-    issuer: PMI
-  - name: "Photoshop for Designers: Working with Shapes"
-    issuer: LinkedIn Learning
+  # Digital marketing credentials only, highest level first. Each links to its verified record.
+  - name: Campaign Manager 360 Certification
+    issuer: Google (Skillshop)
+    date: Apr 2026
+    url: https://www.credential.net/180691430
+  - name: Google Analytics Certification
+    issuer: Google (Skillshop)
+    date: Apr 2026
+    url: https://www.credential.net/180161329
+  - name: AI-Powered Performance Ads Certification
+    issuer: Google (Skillshop)
+    date: May 2026
+    url: https://www.credential.net/181424123
 
 publications:
   - title: "Exploring the Impacts of Automation on Employment: A Qualitative Study on Machine Learning and the Future of Work"
@@ -155,7 +156,10 @@ publications:
 
 memberships:
   - name: International Institute of Business Analysis (IIBA)
-    detail: Certified Member
+    detail: Member
+    issuer: IIBA
+    date: Sep 2026
+    url: https://www.credential.net/142823836
 
 testimonials:
   - name: Susan Tan

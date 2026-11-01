@@ -1,0 +1,330 @@
+---
+// Private resume tailor. Never linked from the site, excluded from the sitemap and robots,
+// and served only after the password check in netlify/edge-functions/tailor.js.
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Resume Tailor</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <style is:global>
+    :root{--bg:#f5f7fb;--card:#fff;--ink:#0f172a;--ink2:#334155;--muted:#64748b;--line:#e2e8f0;--brand:#4f46e5;--brand-soft:#eef2ff;--good:#059669;--good-soft:#e7f7f0;--warn:#b45309;--warn-soft:#fdf3e2;--bad:#b91c1c;--bad-soft:#fdecec;
+      --font:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;--display:'Plus Jakarta Sans','Inter',system-ui,sans-serif}
+    *{box-sizing:border-box}
+    [hidden]{display:none!important}
+    body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--font);padding:24px max(16px,env(safe-area-inset-right)) 48px max(16px,env(safe-area-inset-left))}
+    .wrap{max-width:760px;margin:0 auto;display:grid;gap:16px}
+    .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .logo{font:800 18px var(--display);letter-spacing:-.02em}.logo span{color:var(--brand)}
+    .bar a{font-size:13px;color:var(--muted)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;min-width:0}
+    h1{font:800 clamp(24px,4vw,30px)/1.15 var(--display);letter-spacing:-.02em;margin:0 0 6px}
+    h2{font:700 17px var(--display);margin:0 0 10px}
+    h3{font-size:14px;margin:14px 0 4px}
+    p{margin:0 0 10px}.muted{color:var(--muted)}
+    label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
+    input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+    textarea{min-height:180px;resize:vertical}
+    input:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.two>div{min-width:0}
+    .or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;margin:14px 0 0}
+    .or::before,.or::after{content:"";flex:1;border-top:1px solid var(--line)}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;font:600 15px var(--font);border:1px solid transparent;cursor:pointer;text-decoration:none}
+    .btn-primary{background:var(--brand);color:#fff}.btn-primary:disabled{opacity:.6;cursor:wait}
+    .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+    .btn-small{padding:5px 12px;font-size:13px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
+    .note{border-radius:10px;padding:10px 12px;font-size:14px;margin:10px 0 0}
+    .warn{background:var(--warn-soft);color:var(--warn)}.err{background:var(--bad-soft);color:var(--bad)}.ok{background:var(--good-soft);color:var(--good)}
+    .load{display:grid;gap:10px;margin-top:16px}.load div{display:flex;gap:10px;align-items:center;font-size:14px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--line);flex:none}.dot.done{background:var(--good)}.dot.on{background:var(--brand);animation:pulse 1s infinite}
+    @keyframes pulse{50%{opacity:.35}}
+    @media (prefers-reduced-motion:reduce){.dot.on{animation:none}}
+    .score{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+    .ring{--p:0;width:92px;height:92px;border-radius:50%;background:conic-gradient(var(--good) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;flex:none}
+    .ring b{width:72px;height:72px;border-radius:50%;background:var(--card);display:grid;place-items:center;font:800 20px var(--display);font-variant-numeric:tabular-nums}
+    .score>div:not(.ring){min-width:0;flex:1}
+    .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;margin:0 6px 6px 0}
+    .pill.ok{background:var(--good-soft);color:var(--good)}.pill.no{background:var(--bad-soft);color:var(--bad)}.pill.ask{background:var(--warn-soft);color:var(--warn)}
+    .q{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+    .q:first-of-type{border-top:0}
+    .seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+    .seg button{font:600 13px var(--font);background:transparent;color:var(--ink2);border:0;padding:6px 14px;cursor:pointer}
+    .seg button[aria-pressed="true"]{background:var(--brand);color:#fff}
+    .chg{border-top:1px solid var(--line);padding:10px 0;font-size:14px}.chg:first-of-type{border-top:0}
+    .chg small{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+    .chg ul{margin:4px 0 0;padding-left:18px}
+    del{background:var(--bad-soft);color:var(--bad);border-radius:3px;padding:0 2px}
+    ins{background:var(--good-soft);color:var(--good);text-decoration:none;border-radius:3px;padding:0 2px}
+    .hist{list-style:none;margin:0;padding:0}
+    .hist li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px;flex-wrap:wrap}
+    .hist li:first-child{border-top:0}
+    @media (max-width:560px){.two{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar"><div class="logo">Istihad<span>.</span> Resume Tailor</div><a href="/tailor/logout">Sign out</a></div>
+
+  <section id="step-input" class="card">
+    <h1>Tailor your resume to a job</h1>
+    <p class="muted">Paste a job link or the job text. Your main resume stays the same; this makes a separate copy.</p>
+    <form id="job">
+      <label for="link">Job link</label>
+      <input id="link" type="url" placeholder="https://company.com/careers/…" autocomplete="off" />
+      <p class="note warn" id="needText" hidden></p>
+      <div class="or">or paste the job text (needed for LinkedIn)</div>
+      <div class="two">
+        <div><label for="jobTitle">Job title</label><input id="jobTitle" autocomplete="off" /></div>
+        <div><label for="company">Company name</label><input id="company" autocomplete="off" /></div>
+      </div>
+      <label for="jd">Job description</label>
+      <textarea id="jd" placeholder="Paste everything from the job's description, responsibilities and requirements."></textarea>
+      <p class="muted" style="font-size:13px;margin:8px 0 0">Target keyword match: about 70–75%, worded naturally.</p>
+      <div class="row"><button class="btn btn-primary" id="go" type="submit">Tailor my resume</button></div>
+      <p class="note err" id="error" hidden></p>
+    </form>
+    <div class="load" id="loading" hidden>
+      <div><span class="dot"></span>Reading the job description</div>
+      <div><span class="dot"></span>Matching your experience to the job</div>
+      <div><span class="dot"></span>Running honesty checks</div>
+    </div>
+  </section>
+
+  <section id="step-result" hidden style="display:grid;gap:16px">
+    <div class="card">
+      <div class="score">
+        <div class="ring" id="ring"><b id="pct">0%</b></div>
+        <div><h1 id="resultTitle" style="margin-bottom:4px"></h1><p class="muted" style="margin:0">Keyword match. Your target is 70–75%.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>E-Verify</h2>
+      <p id="ev"></p>
+      <div class="row" style="margin-top:6px">
+        <a class="btn btn-ghost btn-small" href="https://www.e-verify.gov/e-verify-employer-search" target="_blank" rel="noopener">Open official E-Verify search</a>
+        <button class="btn btn-ghost btn-small" id="copyCo" type="button">Copy company name</button>
+      </div>
+      <p class="muted" style="font-size:13px;margin:10px 0 0">E-Verify's search can't be read automatically, so this links to the official list instead of guessing. Companies sometimes enroll under their legal name.</p>
+    </div>
+
+    <div class="card" id="qCard">
+      <h2>Have you done these?</h2>
+      <p class="muted">The job asks for them, but your resume doesn't show them. Only "Yes" adds them to your skills.</p>
+      <div id="questions"></div>
+    </div>
+
+    <div class="card">
+      <h2>Keywords</h2>
+      <p id="kw" style="margin:0"></p>
+    </div>
+
+    <div class="card">
+      <h2>What changed</h2>
+      <div id="changes"></div>
+      <p class="note ok" style="display:flex;gap:8px"><span aria-hidden="true">✓</span><span>Honesty check passed: no new numbers, jobs, dates or unconfirmed skills.</span></p>
+      <p class="note warn" id="dropped" hidden></p>
+    </div>
+
+    <div class="card">
+      <h2>Download</h2>
+      <p class="muted">Builds the PDF and Word files with your answers above and saves this version below.</p>
+      <div class="row" style="margin-top:6px">
+        <button class="btn btn-primary" id="build" type="button">Download PDF and Word</button>
+        <button class="btn btn-ghost" id="again" type="button">Tailor another job</button>
+      </div>
+      <p class="note err" id="buildError" hidden></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Recent versions</h2>
+    <p class="muted" id="histEmpty">Tailored versions you download appear here, saved in this browser.</p>
+    <ul class="hist" id="hist"></ul>
+  </section>
+</div>
+
+<script is:inline>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  let data = null;
+  const answers = new Map();
+
+  // ---------- History (this browser only) ----------
+  const HKEY = 'tailor-history-v1';
+  const loadHist = () => { try { return JSON.parse(localStorage.getItem(HKEY) || '[]'); } catch { return []; } };
+  const saveHist = (h) => { try { localStorage.setItem(HKEY, JSON.stringify(h.slice(0, 30))); } catch {} };
+  function renderHist() {
+    const h = loadHist();
+    $('histEmpty').hidden = h.length > 0;
+    $('hist').innerHTML = h.map((v, i) => `<li><span><b>${esc(v.company || 'Untitled')}</b> · ${esc(v.jobTitle || '')}</span><span class="muted">${esc(v.date)} · ${v.score}% match <button class="btn btn-ghost btn-small" data-i="${i}" type="button">Download again</button></span></li>`).join('');
+    $('hist').querySelectorAll('button').forEach((b) => b.addEventListener('click', async () => {
+      const v = loadHist()[+b.dataset.i];
+      b.disabled = true; b.textContent = 'Building…';
+      const r = await buildFiles(v.payload);
+      b.disabled = false; b.textContent = r.ok ? 'Download again' : 'Failed, try again';
+    }));
+  }
+  renderHist();
+
+  // ---------- Submit ----------
+  $('job').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('error').hidden = true; $('needText').hidden = true;
+    const body = { link: $('link').value.trim(), jobTitle: $('jobTitle').value.trim(), company: $('company').value.trim(), jd: $('jd').value.trim() };
+    if (!body.link && !body.jd) { showError('Paste a job link or the job description first.'); return; }
+    $('go').disabled = true; $('go').textContent = 'Working…';
+    const stop = progress();
+    let res;
+    try {
+      const r = await fetch('/tailor/api/tailor', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const text = (await r.text()).trim();
+      res = text ? JSON.parse(text) : { ok: false, message: 'Empty answer from the server.' };
+    } catch (err) {
+      res = { ok: false, message: 'The connection dropped. Try again.' };
+    }
+    stop();
+    $('go').disabled = false; $('go').textContent = 'Tailor my resume';
+    if (!res.ok) {
+      if (res.needText) { $('needText').textContent = res.message; $('needText').hidden = false; $('jd').focus(); }
+      else showError(res.message);
+      return;
+    }
+    data = res;
+    answers.clear();
+    renderResult();
+  });
+  function showError(m) { $('error').textContent = m; $('error').hidden = false; }
+  function progress() {
+    const dots = [...document.querySelectorAll('#loading .dot')];
+    $('loading').hidden = false;
+    let i = 0;
+    const tick = () => dots.forEach((d, j) => { d.className = 'dot' + (j < i ? ' done' : j === i ? ' on' : ''); });
+    tick();
+    const t = setInterval(() => { if (i < dots.length - 1) { i++; tick(); } }, 7000);
+    return () => { clearInterval(t); $('loading').hidden = true; };
+  }
+
+  // ---------- Result ----------
+  const asked = () => data.missing.filter((m) => m.askUser);
+  const confirmed = () => asked().filter((m) => answers.get(m.keyword) === true).map((m) => m.keyword);
+  function score() {
+    const total = data.matched.length + data.missing.length;
+    return total ? Math.round(((data.matched.length + confirmed().length) / total) * 100) : 0;
+  }
+  function renderScore() {
+    const s = score();
+    $('pct').textContent = s + '%';
+    $('ring').style.setProperty('--p', s);
+    const yes = new Set(confirmed());
+    $('kw').innerHTML = data.matched.map((k) => `<span class="pill ok">${esc(k)}</span>`).join('')
+      + data.missing.map((m) => `<span class="pill ${yes.has(m.keyword) ? 'ok' : 'no'}">${esc(m.keyword)}</span>`).join('');
+  }
+  function renderResult() {
+    $('step-input').hidden = true;
+    $('step-result').hidden = false;
+    const co = data.company || $('company').value.trim();
+    $('resultTitle').textContent = [co, data.jobTitle].filter(Boolean).join(' · ') || 'Tailored resume';
+    $('ev').innerHTML = co ? `Search the official list for <b>${esc(co)}</b> to see if it is enrolled.` : 'Add the company name to search the official list.';
+    $('copyCo').hidden = !co;
+    const qs = asked();
+    $('qCard').hidden = !qs.length;
+    $('questions').innerHTML = qs.map((m, i) => `<div class="q"><span>${esc(m.keyword)}</span><div class="seg" data-k="${i}"><button type="button" aria-pressed="false">Yes</button><button type="button" aria-pressed="true">No</button></div></div>`).join('');
+    $('questions').querySelectorAll('.seg').forEach((seg) => {
+      const k = qs[+seg.dataset.k].keyword;
+      seg.querySelectorAll('button').forEach((b, j) => b.addEventListener('click', () => {
+        answers.set(k, j === 0);
+        seg.querySelectorAll('button').forEach((x, n) => x.setAttribute('aria-pressed', String(n === j)));
+        renderScore();
+      }));
+    });
+    renderScore();
+    renderChanges();
+    $('dropped').hidden = !data.dropped.length;
+    $('dropped').textContent = data.dropped.length ? `Left out by the skill check because they're not in your main resume: ${data.dropped.join(', ')}.` : '';
+    window.scrollTo(0, 0);
+  }
+
+  // Word-level differences.
+  function diff(a, b) {
+    const A = String(a).split(/\s+/), B = String(b).split(/\s+/);
+    const m = A.length, n = B.length, L = Array.from({ length: m + 1 }, () => new Uint16Array(n + 1));
+    for (let i = m - 1; i >= 0; i--) for (let j = n - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+    const out = []; let i = 0, j = 0;
+    const push = (t, w) => { const last = out[out.length - 1]; if (last && last.t === t) last.w.push(w); else out.push({ t, w: [w] }); };
+    while (i < m && j < n) { if (A[i] === B[j]) { push('=', A[i]); i++; j++; } else if (L[i + 1][j] >= L[i][j + 1]) push('-', A[i++]); else push('+', B[j++]); }
+    while (i < m) push('-', A[i++]); while (j < n) push('+', B[j++]);
+    return out.map((s) => { const t = esc(s.w.join(' ')); return s.t === '=' ? t : s.t === '-' ? `<del>${t}</del>` : `<ins>${t}</ins>`; }).join(' ');
+  }
+  const sim = (a, b) => { const x = new Set(a.toLowerCase().split(/\W+/)), y = b.toLowerCase().split(/\W+/); return y.filter((w) => x.has(w)).length / Math.max(y.length, 1); };
+  function renderChanges() {
+    const m = data.master, t = data.resume;
+    const parts = [];
+    if (m.summary !== t.summary) parts.push(`<div class="chg"><small>Summary</small>${diff(m.summary, t.summary)}</div>`);
+    parts.push(`<div class="chg"><small>Skills</small><ul>${t.skills.map((g) => `<li><b>${esc(g.group)}:</b> ${esc(g.items.join(', '))}</li>`).join('')}</ul></div>`);
+    t.experience.forEach((e, i) => {
+      const orig = m.experience[i].bullets;
+      if (JSON.stringify(orig) === JSON.stringify(e.bullets)) return;
+      const rows = e.bullets.map((b) => { const best = orig.reduce((x, y) => (sim(y, b) > sim(x, b) ? y : x), orig[0]); return `<li>${diff(best, b)}</li>`; });
+      parts.push(`<div class="chg"><small>${esc(e.role)} · ${esc(e.company)}</small><ul>${rows.join('')}</ul></div>`);
+    });
+    t.projects.forEach((p, i) => {
+      const orig = m.projects[i].bullets;
+      if (JSON.stringify(orig) === JSON.stringify(p.bullets)) return;
+      const rows = p.bullets.map((b) => { const best = orig.reduce((x, y) => (sim(y, b) > sim(x, b) ? y : x), orig[0]); return `<li>${diff(best, b)}</li>`; });
+      parts.push(`<div class="chg"><small>${esc(p.name)}</small><ul>${rows.join('')}</ul></div>`);
+    });
+    const left = m.certifications.filter((c) => !t.certifications.some((x) => x.name === c.name)).map((c) => c.name);
+    parts.push(`<div class="chg"><small>Certifications</small>${esc(t.certifications.map((c) => c.name).join(' · '))}${left.length ? `<br><del>Left out: ${esc(left.join(', '))}</del>` : ''}</div>`);
+    $('changes').innerHTML = parts.join('');
+  }
+
+  $('copyCo').addEventListener('click', async () => {
+    const co = data?.company || $('company').value.trim();
+    try { await navigator.clipboard.writeText(co); $('copyCo').textContent = 'Copied'; } catch { $('copyCo').textContent = co; }
+  });
+  $('again').addEventListener('click', () => {
+    data = null;
+    ['link', 'jobTitle', 'company', 'jd'].forEach((id) => { $(id).value = ''; });
+    $('step-result').hidden = true; $('step-input').hidden = false; window.scrollTo(0, 0);
+  });
+
+  // ---------- Build and download ----------
+  async function buildFiles(payload) {
+    try {
+      const r = await fetch('/tailor/api/build', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const res = await r.json();
+      if (!res.ok) return res;
+      for (const f of res.files) {
+        const bin = Uint8Array.from(atob(f.data), (c) => c.charCodeAt(0));
+        const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([bin], { type: f.type })), download: f.name });
+        document.body.append(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+        await new Promise((ok) => setTimeout(ok, 400));
+      }
+      return { ok: true };
+    } catch { return { ok: false, message: "Couldn't build the files. Try again." }; }
+  }
+  $('build').addEventListener('click', async () => {
+    $('buildError').hidden = true;
+    const payload = { resume: data.resume, confirmed: confirmed(), gapKeywords: data.missing.map((m) => m.keyword), company: data.company || $('company').value.trim() };
+    $('build').disabled = true; $('build').textContent = 'Building…';
+    const r = await buildFiles(payload);
+    $('build').disabled = false; $('build').textContent = 'Download PDF and Word';
+    if (!r.ok) { $('buildError').textContent = r.message; $('buildError').hidden = false; return; }
+    const h = loadHist();
+    h.unshift({ company: payload.company, jobTitle: data.jobTitle, score: score(), date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }), payload });
+    saveHist(h); renderHist();
+  });
+})();
+</script>
+</body>
+</html>

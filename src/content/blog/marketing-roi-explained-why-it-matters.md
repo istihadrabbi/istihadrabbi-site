@@ -3,7 +3,7 @@ title: "Marketing ROI Explained: Why It Matters"
 date: "2026-04-19"
 description: "Understand Marketing ROI and how to measure it effectively to justify your marketing spend and improve budgeting decisions."
 tags: ["Digital Marketing"]
-image: "/images/blog/MROI.png"
+image: "/images/blog/marketing-roi-explained-why-it-matters.webp"
 ---
 
 ---

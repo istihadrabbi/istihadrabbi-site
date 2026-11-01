@@ -3,7 +3,7 @@ title: "KPI vs OKR: The Data-Driven Growth Framework Most Teams Get Wrong"
 date: "2026-02-18"
 description: "KPI and OKR are not competitors\u2014they solve different problems. Learn when to use each, how to connect them, and how to avoid measurement chaos."
 tags: ["Business Analytics"]
-image: "/images/blog/ChatGPT-Image-Feb-18-2026-11_03_38-PM.png"
+image: "/images/blog/kpi-vs-okr-the-data-driven-growth-framework-most-teams-get-wrong.webp"
 ---
 
 Teams often confuse KPIs and OKRs, then wonder why performance reporting feels messy. Here’s the clean separation:
