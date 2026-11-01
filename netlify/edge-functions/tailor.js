@@ -9,7 +9,7 @@
 
 import master from '../../src/data/resume-master.json' with { type: 'json' };
 import { assembleTailored, stripContact } from '../../scripts/resume-checks.mjs';
-import { COOKIE, isSignedIn, sessionToken } from '../../scripts/tailor-auth.mjs';
+import { COOKIE, isSignedIn, sessionToken, same } from '../../scripts/tailor-auth.mjs';
 
 const env = (k) => (globalThis.Netlify?.env?.get(k) ?? globalThis.process?.env?.[k]) || '';
 const NOINDEX = { 'X-Robots-Tag': 'noindex, nofollow', 'Cache-Control': 'no-store' };
@@ -26,7 +26,7 @@ export default async function tailor(req, context) {
     const form = await req.formData().catch(() => null);
     const given = String(form?.get('password') || '');
     await new Promise((r) => setTimeout(r, 600)); // slows down password guessing
-    if (given && given === password) {
+    if (given && same(given, password)) {
       return new Response(null, {
         status: 303,
         headers: { Location: '/tailor/', 'Set-Cookie': `${COOKIE}=${await sessionToken(password)}; Path=/tailor; HttpOnly; Secure; SameSite=Strict; Max-Age=2592000`, ...NOINDEX },
