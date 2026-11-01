@@ -167,7 +167,7 @@ const tools = ['Google Analytics 4', 'Google Ads', 'Meta Ads Manager', 'Google T
         <span class="eyebrow">Certifications</span>
         <h2>Credentials</h2>
         <ul class="list">
-          {r.certifications.map((c: any) => (
+          {[...r.certifications, ...r.memberships.map((m: any) => ({ ...m, name: `${m.name} ${m.detail}`, issuer: 'Professional membership' }))].map((c: any) => (
             <li>
               <strong>{c.url ? <a href={c.url} target="_blank" rel="noopener">{c.name} <span aria-hidden="true">↗</span></a> : c.name}</strong>
               <span class="muted">{c.issuer}{c.date && ` · Issued ${c.date}`}{c.url && ' · Verified'}</span>

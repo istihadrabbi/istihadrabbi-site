@@ -156,7 +156,10 @@ publications:
 
 memberships:
   - name: International Institute of Business Analysis (IIBA)
-    detail: Certified Member
+    detail: Member
+    issuer: IIBA
+    date: Sep 2026
+    url: https://www.credential.net/142823836
 
 testimonials:
   - name: Susan Tan
