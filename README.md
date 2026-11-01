@@ -25,3 +25,5 @@ node scripts/build-resume.mjs --in path/to/tailored.yaml --out path/to/folder
 Tailoring may only reorder, emphasize and reword what is already in the master file. The script refuses to build if the tailored copy contains any number that is not in the master resume.
 
 Keyword target: aim for a natural, genuine match of about 70–75% of the job description's keywords. Do not copy every keyword or mirror the posting's wording.
+
+Planned private tailor page (not built yet): must never be public. Unlinked from the site, password checked on the server (not in the browser), `noindex`, and blocked in robots.txt.
