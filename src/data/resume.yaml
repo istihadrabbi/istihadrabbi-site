@@ -155,6 +155,10 @@ publications:
     type: Conference paper
 
 memberships:
+  - name: American Marketing Association (AMA)
+    detail: Member
+    issuer: AMA
+    url: https://www.credly.com/badges/4d5e8c9a-205c-4fc0-bd9e-db0e8af5fe81/public_url
   - name: International Institute of Business Analysis (IIBA)
     detail: Member
     issuer: IIBA
