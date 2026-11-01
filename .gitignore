@@ -4,3 +4,4 @@ dist/
 .netlify/
 public/resume/
 src/data/resume-files.json
+src/data/resume-master.json
