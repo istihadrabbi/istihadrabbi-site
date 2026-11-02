@@ -20,7 +20,7 @@ export const forFiles = (r) => ({
 
 export const fileBase = (r) => `${r.name.replace(/\s+/g, '-')}-${r.title.replace(/\s+/g, '-')}-Resume`;
 
-function helpers(r) {
+export function helpers(r) {
   const strip = (u) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
   const contact = [r.location, r.phone, r.email, strip(r.linkedin), strip(r.website)];
   const dates = (x) => `${x.start} – ${x.end}`;

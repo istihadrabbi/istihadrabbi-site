@@ -8,7 +8,7 @@
 //   GEMINI_MODEL     optional, default gemini-flash-latest (falls back to gemini-flash-lite-latest)
 
 import master from '../../src/data/resume-master.json' with { type: 'json' };
-import { assembleTailored, stripContact } from '../../scripts/resume-checks.mjs';
+import { checkLetter, assembleTailored, stripContact } from '../../scripts/resume-checks.mjs';
 import { COOKIE, isSignedIn, sessionToken, same } from '../../scripts/tailor-auth.mjs';
 
 const env = (k) => (globalThis.Netlify?.env?.get(k) ?? globalThis.process?.env?.[k]) || '';
@@ -94,6 +94,7 @@ async function handleTailor(req) {
     if (!ai.ok) return ai;
     const gap = (ai.data.keywords?.missing || []).map((m) => m.keyword).filter(Boolean);
     const { resume, problems, dropped } = assembleTailored(master, ai.data, [], gap);
+    problems.push(...checkLetter(master, ai.data.coverLetter, gap));
     last = { resume, problems, dropped, ai: ai.data, model: ai.model };
     if (!problems.length) break;
     feedback = `Your previous answer was rejected because it contained ${problems.join('; ')}. Use only facts and numbers from the resume.`;
@@ -112,6 +113,7 @@ async function handleTailor(req) {
     matched: (kw.matched || []).filter((k) => typeof k === 'string'),
     missing: (kw.missing || []).filter((m) => m && typeof m.keyword === 'string'),
     dropped: last.dropped,
+    coverLetter: (last.ai.coverLetter || []).filter((t) => typeof t === 'string' && t.trim()).map((t) => t.trim()),
   };
 }
 
@@ -154,6 +156,13 @@ STRICT RULES
 - certifications: names exactly as in the RESUME, most relevant first; you may leave out irrelevant ones (keep at least 3).
 - keywords: list the 25-35 most important keywords/skills from the job posting. "matched" = ones the tailored resume genuinely shows. "missing" = ones it does not; set askUser=true only for skills or tools the candidate could plausibly have used but the resume doesn't mention (e.g. a software tool), and false for things like years of experience, industry background or degrees.
 - summary: 2-3 sentences (at most 55 words), no first person, keep it truthful and specific.
+- coverLetter: a cover letter for THIS job, as 3-4 body paragraphs (about 250-320 words in total), in the first person.
+  Do NOT include the date, address, greeting ("Dear ...") or sign-off; those are added automatically.
+  Paragraph 1: the role and company by name, and one sentence on why this candidate fits.
+  Middle paragraph(s): 2-3 concrete achievements from the RESUME that match the job's main requirements, with their exact numbers.
+  Last paragraph: short, confident close asking for a conversation.
+  Same honesty rules as the resume: only facts and numbers from the RESUME. Only say things about the company that the JOB POSTING states.
+  Do not mention skills or tools the resume doesn't show. Plain, warm, professional tone; no clichés like "I am writing to express my interest".
 ${feedback ? `\nIMPORTANT: ${feedback}\n` : ''}
 JOB TITLE: ${jobTitle || '(not given)'}
 COMPANY: ${company || '(not given)'}
@@ -176,6 +185,7 @@ const SCHEMA = {
     experience: { type: 'ARRAY', items: { type: 'OBJECT', properties: { bullets: { type: 'ARRAY', items: { type: 'STRING' } } }, required: ['bullets'] } },
     projects: { type: 'ARRAY', items: { type: 'OBJECT', properties: { bullets: { type: 'ARRAY', items: { type: 'STRING' } } }, required: ['bullets'] } },
     certifications: { type: 'ARRAY', items: { type: 'STRING' } },
+    coverLetter: { type: 'ARRAY', items: { type: 'STRING' } },
     keywords: {
       type: 'OBJECT',
       properties: {
@@ -185,7 +195,7 @@ const SCHEMA = {
       required: ['matched', 'missing'],
     },
   },
-  required: ['summary', 'skills', 'experience', 'projects', 'certifications', 'keywords'],
+  required: ['summary', 'skills', 'experience', 'projects', 'certifications', 'coverLetter', 'keywords'],
 };
 
 async function askGemini(apiKey, models, prompt) {
