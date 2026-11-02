@@ -34,7 +34,7 @@ export function renderPdf(input) {
   return new Promise((resolve, reject) => {
   const doc = new PDFDocument({
     size: 'LETTER',
-    margins: { top: 46, bottom: 46, left: 54, right: 54 },
+    margins: { top: 32, bottom: 28, left: 54, right: 54 },
     info: { Title: `${r.name} – ${r.title} Resume`, Author: r.name, Subject: r.title,
       Keywords: r.skills.flatMap((s) => s.items).join(', ') },
   });
@@ -52,30 +52,31 @@ export function renderPdf(input) {
   doc.fontSize(9.5).fillColor(ink).text(contact.join('  |  '), { align: 'center' });
 
   const heading = (t) => {
-    doc.moveDown(0.6);
-    if (doc.y + 120 > doc.page.height - doc.page.margins.bottom) doc.addPage();
+    doc.moveDown(0.35);
+    if (doc.y + 50 > doc.page.height - doc.page.margins.bottom) doc.addPage();
     doc.font('Helvetica-Bold').fontSize(11).fillColor(accent).text(t.toUpperCase(), { characterSpacing: 0.5 });
     const y = doc.y + 1;
     doc.moveTo(54, y).lineTo(54 + W, y).lineWidth(0.6).strokeColor(accent).stroke();
-    doc.moveDown(0.35);
+    doc.moveDown(0.25);
     doc.fillColor(ink);
   };
-  const body = (t, opts = {}) => doc.font('Helvetica').fontSize(10).fillColor(ink).text(t, { lineGap: 1.2, ...opts });
+  const FS = 9.5, LG = 0.4; // body font size and line gap, tuned so the resume fits on one page
+  const body = (t, opts = {}) => doc.font('Helvetica').fontSize(FS).fillColor(ink).text(t, { lineGap: LG, ...opts });
   const bottom = () => doc.page.height - doc.page.margins.bottom;
   const ensure = (h) => { if (doc.y + h > bottom()) { doc.addPage(); } };
   const bullet = (t) => {
-    doc.font('Helvetica').fontSize(10);
-    ensure(doc.heightOfString(t, { width: W - 20, lineGap: 1.2 }) + 2);
-    doc.font('Helvetica').fontSize(10).text('•', 62, doc.y, { continued: false, lineBreak: false });
-    doc.text(t, 74, doc.y, { width: W - 20, lineGap: 1.2 });
+    doc.font('Helvetica').fontSize(FS);
+    ensure(doc.heightOfString(t, { width: W - 20, lineGap: LG }) + 2);
+    doc.font('Helvetica').fontSize(FS).text('•', 62, doc.y, { continued: false, lineBreak: false });
+    doc.text(t, 74, doc.y, { width: W - 20, lineGap: LG });
     doc.x = 54;
   };
   const roleLine = (left, right) => {
     ensure(60);
     const y = doc.y;
-    doc.font('Helvetica-Bold').fontSize(10.5).text(left, 54, y, { width: W - 130 });
+    doc.font('Helvetica-Bold').fontSize(10).text(left, 54, y, { width: W - 130 });
     const after = doc.y;
-    doc.font('Helvetica').fontSize(10).text(right, 54, y, { width: W, align: 'right' });
+    doc.font('Helvetica').fontSize(FS).text(right, 54, y, { width: W, align: 'right' });
     doc.y = Math.max(after, doc.y);
     doc.x = 54;
   };
@@ -85,46 +86,49 @@ export function renderPdf(input) {
 
   heading('Core Skills');
   for (const s of r.skills) {
-    doc.font('Helvetica-Bold').fontSize(10).text(`${s.group}: `, { continued: true, lineGap: 1.2 });
+    doc.font('Helvetica-Bold').fontSize(FS).text(`${s.group}: `, { continued: true, lineGap: LG });
     doc.font('Helvetica').text(s.items.join(', '));
   }
 
   heading('Professional Experience');
   r.experience.forEach((e, i) => {
-    if (i) doc.moveDown(0.4);
+    if (i) doc.moveDown(0.15);
     roleLine(e.role, dates(e));
-    doc.font('Helvetica-Oblique').fontSize(10).text(`${e.company}, ${e.location}`);
-    doc.moveDown(0.15);
+    doc.font('Helvetica-Oblique').fontSize(FS).text(`${e.company}, ${e.location}`);
+    doc.moveDown(0.05);
     e.bullets.forEach(bullet);
   });
 
   heading('Selected Projects');
   r.projects.forEach((p, i) => {
-    if (i) doc.moveDown(0.4);
+    if (i) doc.moveDown(0.15);
     roleLine(p.name, dates(p));
-    doc.font('Helvetica-Oblique').fontSize(10).text(p.client);
-    doc.moveDown(0.15);
+    doc.font('Helvetica-Oblique').fontSize(FS).text(p.client);
+    doc.moveDown(0.05);
     p.bullets.forEach(bullet);
   });
 
   heading('Education');
+  // One line per degree: bold degree, then school and GPA, year on the right.
   r.education.forEach((e) => {
-    roleLine(e.degree, e.year);
-    body(`${e.school}${e.gpa ? `, GPA ${e.gpa}` : ''}`);
+    const y = doc.y;
+    doc.font('Helvetica-Bold').fontSize(FS).text(e.degree, 54, y, { continued: true, lineGap: LG });
+    doc.font('Helvetica').text(`, ${e.school}${e.gpa ? `, GPA ${e.gpa}` : ''}`);
+    const after = doc.y;
+    doc.text(e.year, 54, y, { width: W, align: 'right' });
+    doc.y = after; doc.x = 54;
   });
 
-  heading('Certifications');
+  // Certifications and memberships share one section to keep the resume to one page.
+  heading(r.memberships?.length ? 'Certifications & Memberships' : 'Certifications');
   r.certifications.forEach((c) => bullet(`${c.name}, ${c.issuer}`));
+  (r.memberships || []).forEach((m) => bullet(`${m.name}, ${m.detail}`));
 
   if (r.publications.length) {
     heading('Publications');
     r.publications.forEach((p) => bullet(`${p.title}. ${p.venue} (${p.type}).`));
   }
 
-  if (r.memberships?.length) {
-    heading('Professional Memberships');
-    r.memberships.forEach((m) => bullet(`${m.name}, ${m.detail}`));
-  }
   doc.end();
   });
 }
@@ -135,19 +139,21 @@ export async function renderDocx(input) {
   const { contact, dates } = helpers(r);
   const FONT = 'Calibri';
   const ACC = '1F3A5F';
-  const run = (text, o = {}) => new TextRun({ text, font: FONT, size: 21, ...o });
+  const SZ = 19; // body size in half-points (9.5pt Calibri), tuned so the resume fits on one page
+  const run = (text, o = {}) => new TextRun({ text, font: FONT, size: SZ, ...o });
   const RIGHT = 10080; // right tab at text width (8.5in - 2*0.75in = 7in = 10080 twips)
   const H = (t) => new Paragraph({
-    spacing: { before: 200, after: 80 }, keepNext: true,
+    spacing: { before: 100, after: 40 }, keepNext: true,
     border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: ACC, space: 2 } },
     children: [run(t.toUpperCase(), { bold: true, size: 22, color: ACC })],
   });
-  const P = (children, o = {}) => new Paragraph({ spacing: { after: 40 }, children, ...o });
-  const B = (t) => new Paragraph({ bullet: { level: 0 }, spacing: { after: 30 }, children: [run(t)] });
-  const role = (left, right) => new Paragraph({
-    spacing: { before: 100, after: 0 }, keepNext: true, keepLines: true,
+  const P = (children, o = {}) => new Paragraph({ spacing: { after: 0 }, children, ...o });
+  const B = (t) => new Paragraph({ bullet: { level: 0 }, spacing: { after: 0 }, children: [run(t)] });
+  // keep = false for single-line entries (education) so they don't chain onto the next section.
+  const role = (left, right, leftRuns, keep = true) => new Paragraph({
+    spacing: { before: keep ? 40 : 0, after: 0 }, keepNext: keep, keepLines: true,
     tabStops: [{ type: TabStopType.RIGHT, position: RIGHT }],
-    children: [run(left, { bold: true }), run(`\t${right}`)],
+    children: [...(leftRuns || [run(left, { bold: true })]), run(`\t${right}`)],
   });
 
   const children = [
@@ -179,18 +185,18 @@ export async function renderDocx(input) {
       ...p.bullets.map(B),
     ]),
     H('Education'),
-    ...r.education.flatMap((e) => [role(e.degree, e.year), P([run(`${e.school}${e.gpa ? `, GPA ${e.gpa}` : ''}`)])]),
-    H('Certifications'),
+    ...r.education.map((e) => role(null, e.year, [run(e.degree, { bold: true }), run(`, ${e.school}${e.gpa ? `, GPA ${e.gpa}` : ''}`)], false)),
+    H(r.memberships?.length ? 'Certifications & Memberships' : 'Certifications'),
     ...r.certifications.map((c) => B(`${c.name}, ${c.issuer}`)),
+    ...(r.memberships || []).map((m) => B(`${m.name}, ${m.detail}`)),
     ...(r.publications.length ? [H('Publications'), ...r.publications.map((p) => B(`${p.title}. ${p.venue} (${p.type}).`))] : []),
-    ...(r.memberships?.length ? [H('Professional Memberships'), ...r.memberships.map((m) => B(`${m.name}, ${m.detail}`))] : []),
   ];
 
   const doc = new Document({
     creator: r.name, title: `${r.name} – ${r.title} Resume`,
-    styles: { default: { document: { run: { font: FONT, size: 21 } } } },
+    styles: { default: { document: { run: { font: FONT, size: SZ }, paragraph: { spacing: { line: 228 } } } } },
     sections: [{
-      properties: { page: { size: { width: 12240, height: 15840 }, margin: { top: 1000, bottom: 1000, left: 1080, right: 1080 } } },
+      properties: { page: { size: { width: 12240, height: 15840 }, margin: { top: 640, bottom: 560, left: 1080, right: 1080 } } },
       children,
     }],
   });

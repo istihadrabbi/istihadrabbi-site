@@ -15,7 +15,7 @@ available: true
 summary: >-
   Results-driven Digital Marketing and Data Analyst with 4+ years of experience
   managing $15K+ monthly Google Ads and Meta Ads budgets, growing website traffic 60%
-  and improving ROAS 30%. Skilled in SEO/SEM, GA4, Google Tag Manager and marketing
+  and improving ROAS 30%. Skilled in SEO/AEO/GEO, GA4, Google Tag Manager and marketing
   analytics, backed by dual MBAs in Business Analytics and Finance.
 
 # Headline numbers shown at the top of the website.
@@ -32,8 +32,8 @@ highlights:
 skills:
   - group: Digital Marketing
     items: [Google Ads, Meta Ads Manager, GA4, Google Tag Manager, SEMrush, Hootsuite, Sprout Social]
-  - group: SEO/SEM
-    items: [Keyword Research, On-Page SEO, Technical SEO, Competitor Analysis, Content Strategy]
+  - group: SEO/AEO/GEO
+    items: [Keyword Research, On-Page SEO, Technical SEO, Answer Engine Optimization, Generative Engine Optimization, Competitor Analysis, Content Strategy]
   - group: Analytics & Data
     items: [Excel (Advanced), Power BI, Tableau, Google Looker Studio, SQL (Basics), Data Modeling]
   - group: Core Competencies
