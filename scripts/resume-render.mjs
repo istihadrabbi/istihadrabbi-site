@@ -8,6 +8,16 @@ import {
   Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle, TabStopType, ExternalHyperlink,
 } from 'docx';
 
+// The PDF and Word files are a shorter version of the website.
+// In resume.yaml, `in_files: false` on a skill group or job keeps it on the website only,
+// and `files_publications: false` leaves the Publications section out of the files.
+export const forFiles = (r) => ({
+  ...r,
+  skills: r.skills.filter((s) => s.in_files !== false),
+  experience: r.experience.filter((e) => e.in_files !== false),
+  publications: r.files_publications === false ? [] : (r.publications || []),
+});
+
 export const fileBase = (r) => `${r.name.replace(/\s+/g, '-')}-${r.title.replace(/\s+/g, '-')}-Resume`;
 
 function helpers(r) {
@@ -18,7 +28,8 @@ function helpers(r) {
 }
 
 // ---------- PDF ----------
-export function renderPdf(r) {
+export function renderPdf(input) {
+  const r = forFiles(input);
   const { contact, dates } = helpers(r);
   return new Promise((resolve, reject) => {
   const doc = new PDFDocument({
@@ -105,8 +116,10 @@ export function renderPdf(r) {
   heading('Certifications');
   r.certifications.forEach((c) => bullet(`${c.name}, ${c.issuer}`));
 
-  heading('Publications');
-  r.publications.forEach((p) => bullet(`${p.title}. ${p.venue} (${p.type}).`));
+  if (r.publications.length) {
+    heading('Publications');
+    r.publications.forEach((p) => bullet(`${p.title}. ${p.venue} (${p.type}).`));
+  }
 
   if (r.memberships?.length) {
     heading('Professional Memberships');
@@ -117,7 +130,8 @@ export function renderPdf(r) {
 }
 
 // ---------- DOCX ----------
-export async function renderDocx(r) {
+export async function renderDocx(input) {
+  const r = forFiles(input);
   const { contact, dates } = helpers(r);
   const FONT = 'Calibri';
   const ACC = '1F3A5F';
@@ -168,8 +182,7 @@ export async function renderDocx(r) {
     ...r.education.flatMap((e) => [role(e.degree, e.year), P([run(`${e.school}${e.gpa ? `, GPA ${e.gpa}` : ''}`)])]),
     H('Certifications'),
     ...r.certifications.map((c) => B(`${c.name}, ${c.issuer}`)),
-    H('Publications'),
-    ...r.publications.map((p) => B(`${p.title}. ${p.venue} (${p.type}).`)),
+    ...(r.publications.length ? [H('Publications'), ...r.publications.map((p) => B(`${p.title}. ${p.venue} (${p.type}).`))] : []),
     ...(r.memberships?.length ? [H('Professional Memberships'), ...r.memberships.map((m) => B(`${m.name}, ${m.detail}`))] : []),
   ];
 

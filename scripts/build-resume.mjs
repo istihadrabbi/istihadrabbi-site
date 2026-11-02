@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import YAML from 'yaml';
-import { renderPdf, renderDocx, fileBase } from './resume-render.mjs';
+import { renderPdf, renderDocx, fileBase, forFiles } from './resume-render.mjs';
 import { numbersNotIn } from './resume-checks.mjs';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
@@ -36,7 +36,7 @@ fs.writeFileSync(path.join(outDir, `${base}.pdf`), await renderPdf(r));
 fs.writeFileSync(path.join(outDir, `${base}.docx`), await renderDocx(r));
 // Expose file names to the site, and the master resume to the private tailor page (master build only).
 if (!tailored) {
-  fs.writeFileSync(path.join(root, 'src/data/resume-master.json'), JSON.stringify(r));
+  fs.writeFileSync(path.join(root, 'src/data/resume-master.json'), JSON.stringify(forFiles(r)));
   fs.writeFileSync(path.join(root, 'src/data/resume-files.json'),
     JSON.stringify({ pdf: `/resume/${base}.pdf`, docx: `/resume/${base}.docx` }, null, 2));
 }
