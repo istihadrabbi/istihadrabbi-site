@@ -70,7 +70,9 @@ p { margin: 0 0 1em; }
 @media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px) {
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
-  .section { padding: 64px 0; }
+  .section { padding: 56px 0; }
+  .section-head { margin-bottom: 28px; }
+  .container { padding: 0 16px; }
 }
 
 .chip {

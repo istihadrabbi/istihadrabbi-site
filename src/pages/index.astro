@@ -262,7 +262,8 @@ const tools = ['Google Analytics 4', 'Google Ads', 'Meta Ads Manager', 'Google T
   .ats-note { font-size: .85rem; color: var(--muted); margin-top: .9rem; }
   .hero-visual { position: relative; }
   .photo { width: 78%; aspect-ratio: 1; object-fit: cover; border-radius: 24px; margin-left: auto; box-shadow: var(--shadow); }
-  .photo + .dash { position: absolute; left: 0; bottom: -28px; width: 74%; padding: 16px 18px; }
+  /* The highlights card sits below the photo, never on top of it. */
+  .photo + .dash { width: 78%; margin: 16px 0 0 auto; padding: 16px 18px; }
   .photo + .dash .spark { display: none; }
   .photo + .dash .dash-kpis { margin-bottom: 0; }
   .dash { padding: 20px; }
@@ -291,6 +292,7 @@ const tools = ['Google Analytics 4', 'Google Ads', 'Meta Ads Manager', 'Google T
   .tools { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
   .tools strong { font-weight: 600; color: var(--ink-2); }
   .list { list-style: none; padding: 0; margin: 0; }
+  .list a { display: inline-block; padding: 4px 0; }
   .list li { padding: 14px 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
   .quote { margin: 0; display: flex; flex-direction: column; justify-content: space-between; }
   .quote blockquote { margin: 0 0 1.2rem; color: var(--ink-2); }
@@ -307,7 +309,7 @@ const tools = ['Google Analytics 4', 'Google Ads', 'Meta Ads Manager', 'Google T
   .contact-list { list-style: none; padding: 0; margin: 24px 0 28px; }
   .contact-list li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.12); display: flex; gap: 16px; }
   .contact-list span { width: 90px; color: #94a3b8; flex: none; }
-  .contact-list a { color: #fff; }
+  .contact-list a { color: #fff; padding: 6px 0; margin: -6px 0; overflow-wrap: anywhere; }
   .contact form { color: var(--ink); }
   @media (max-width: 900px) {
     .hero-grid, .about { grid-template-columns: 1fr; }
@@ -315,5 +317,21 @@ const tools = ['Google Analytics 4', 'Google Ads', 'Meta Ads Manager', 'Google T
     .kpis { grid-template-columns: repeat(2, 1fr); }
     .timeline > li { grid-template-columns: 1fr; gap: 6px; }
     .when { padding-top: 0; }
+  }
+  /* Phones */
+  @media (max-width: 640px) {
+    .hero { padding: 36px 0 32px; }
+    .hero-visual { max-width: 380px; margin: 0 auto; width: 100%; }
+    .photo, .photo + .dash { width: 100%; margin-left: 0; }
+    .photo { aspect-ratio: 4 / 4.2; object-position: center 20%; }
+    .cta { flex-direction: column; align-items: stretch; }
+    .cta > *, .cta :global(.btn) { width: 100%; justify-content: center; }
+    .kpis { margin-top: 32px; }
+    .kpis li { padding: 16px; }
+    .kpis b { font-size: 1.6rem; }
+    .about { gap: 8px; }
+    .result b { font-size: 2rem; }
+    .contact-list li { gap: 10px; }
+    .contact-list span { width: 72px; }
   }
 </style>
