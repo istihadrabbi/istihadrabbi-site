@@ -134,13 +134,24 @@
     </div>
 
     <div class="card">
-      <h2>Download</h2>
-      <p class="muted">Builds the PDF and Word files with your answers above and saves this version below.</p>
+      <h2>Download resume</h2>
+      <p class="muted">Builds the one-page PDF and Word files with your answers above and saves this version below.</p>
       <div class="row" style="margin-top:6px">
-        <button class="btn btn-primary" id="build" type="button">Download PDF and Word</button>
-        <button class="btn btn-ghost" id="again" type="button">Tailor another job</button>
+        <button class="btn btn-primary" id="build" type="button">Download resume (PDF and Word)</button>
       </div>
       <p class="note err" id="buildError" hidden></p>
+    </div>
+
+    <div class="card">
+      <h2>Cover letter</h2>
+      <p class="muted">Written for this job from your resume, with the same honesty check. Edit anything you like; leave a blank line between paragraphs. The date, greeting and sign-off are added for you.</p>
+      <textarea id="letter" style="min-height:300px" aria-label="Cover letter text"></textarea>
+      <p class="muted" style="font-size:13px;margin:6px 0 0"><span id="letterWords">0</span> words. Aim for 250–350 so it fits on one page.</p>
+      <div class="row" style="margin-top:10px">
+        <button class="btn btn-primary" id="buildLetter" type="button">Download cover letter (PDF and Word)</button>
+        <button class="btn btn-ghost" id="again" type="button">Tailor another job</button>
+      </div>
+      <p class="note err" id="letterError" hidden></p>
     </div>
   </section>
 
@@ -165,12 +176,13 @@
   function renderHist() {
     const h = loadHist();
     $('histEmpty').hidden = h.length > 0;
-    $('hist').innerHTML = h.map((v, i) => `<li><span><b>${esc(v.company || 'Untitled')}</b> · ${esc(v.jobTitle || '')}</span><span class="muted">${esc(v.date)} · ${v.score}% match <button class="btn btn-ghost btn-small" data-i="${i}" type="button">Download again</button></span></li>`).join('');
+    $('hist').innerHTML = h.map((v, i) => `<li><span><b>${esc(v.company || 'Untitled')}</b> · ${esc(v.jobTitle || '')}</span><span class="muted">${esc(v.date)} · ${v.score}% match <button class="btn btn-ghost btn-small" data-i="${i}" type="button">Resume</button>${v.letter ? ` <button class="btn btn-ghost btn-small" data-i="${i}" data-letter="1" type="button">Cover letter</button>` : ''}</span></li>`).join('');
     $('hist').querySelectorAll('button').forEach((b) => b.addEventListener('click', async () => {
       const v = loadHist()[+b.dataset.i];
+      const label = b.textContent;
       b.disabled = true; b.textContent = 'Building…';
-      const r = await buildFiles(v.payload);
-      b.disabled = false; b.textContent = r.ok ? 'Download again' : 'Failed, try again';
+      const r = await buildFiles(b.dataset.letter ? v.letter : v.payload);
+      b.disabled = false; b.textContent = r.ok ? label : 'Failed, try again';
     }));
   }
   renderHist();
@@ -248,6 +260,9 @@
     });
     renderScore();
     renderChanges();
+    $('letter').value = (data.coverLetter || []).join('\n\n');
+    $('letterError').hidden = true;
+    countWords();
     $('dropped').hidden = !data.dropped.length;
     $('dropped').textContent = data.dropped.length ? `Left out by the skill check because they're not in your main resume: ${data.dropped.join(', ')}.` : '';
     window.scrollTo(0, 0);
@@ -287,6 +302,26 @@
     $('changes').innerHTML = parts.join('');
   }
 
+  // ---------- Cover letter ----------
+  const paragraphs = () => $('letter').value.split(/\n\s*\n/).map((t) => t.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  function countWords() { $('letterWords').textContent = ($('letter').value.match(/\S+/g) || []).length; }
+  $('letter').addEventListener('input', countWords);
+  const letterPayload = () => ({ kind: 'letter', paragraphs: paragraphs(), company: data.company || $('company').value.trim(), jobTitle: data.jobTitle || $('jobTitle').value.trim() });
+  // Keep the latest letter with this job's saved version, so "Cover letter" in Recent versions gets your edits.
+  function saveLetterToHistory(letter) {
+    saveVersion({ letter });
+  }
+  $('buildLetter').addEventListener('click', async () => {
+    $('letterError').hidden = true;
+    const payload = letterPayload();
+    if (!payload.paragraphs.length) { $('letterError').textContent = 'The cover letter is empty.'; $('letterError').hidden = false; return; }
+    $('buildLetter').disabled = true; $('buildLetter').textContent = 'Building…';
+    const r = await buildFiles(payload);
+    $('buildLetter').disabled = false; $('buildLetter').textContent = 'Download cover letter (PDF and Word)';
+    if (!r.ok) { $('letterError').textContent = r.message; $('letterError').hidden = false; return; }
+    saveLetterToHistory(payload);
+  });
+
   $('copyCo').addEventListener('click', async () => {
     const co = data?.company || $('company').value.trim();
     try { await navigator.clipboard.writeText(co); $('copyCo').textContent = 'Copied'; } catch { $('copyCo').textContent = co; }
@@ -298,6 +333,16 @@
   });
 
   // ---------- Build and download ----------
+  const resumePayload = () => ({ resume: data.resume, confirmed: confirmed(), gapKeywords: data.missing.map((m) => m.keyword), company: data.company || $('company').value.trim() });
+  // One saved version per job: update it if it's already the latest, otherwise add it.
+  function saveVersion(extra) {
+    const h = loadHist();
+    const v = { ...versionEntry(), ...extra };
+    if (h[0] && h[0].company === v.company && h[0].jobTitle === v.jobTitle) h[0] = { ...h[0], ...v };
+    else h.unshift(v);
+    saveHist(h); renderHist();
+  }
+  const versionEntry = () => ({ company: data.company || $('company').value.trim(), jobTitle: data.jobTitle, score: score(), date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }), payload: resumePayload() });
   async function buildFiles(payload) {
     try {
       const r = await fetch('/tailor/api/build', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -315,14 +360,12 @@
   }
   $('build').addEventListener('click', async () => {
     $('buildError').hidden = true;
-    const payload = { resume: data.resume, confirmed: confirmed(), gapKeywords: data.missing.map((m) => m.keyword), company: data.company || $('company').value.trim() };
+    const payload = resumePayload();
     $('build').disabled = true; $('build').textContent = 'Building…';
     const r = await buildFiles(payload);
-    $('build').disabled = false; $('build').textContent = 'Download PDF and Word';
+    $('build').disabled = false; $('build').textContent = 'Download resume (PDF and Word)';
     if (!r.ok) { $('buildError').textContent = r.message; $('buildError').hidden = false; return; }
-    const h = loadHist();
-    h.unshift({ company: payload.company, jobTitle: data.jobTitle, score: score(), date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }), payload });
-    saveHist(h); renderHist();
+    saveVersion({ letter: paragraphs().length ? letterPayload() : null });
   });
 })();
 </script>

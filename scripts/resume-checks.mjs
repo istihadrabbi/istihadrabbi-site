@@ -85,3 +85,20 @@ export function assembleTailored(master, ai, confirmed = [], gapKeywords = []) {
 
   return { resume: r, problems, dropped };
 }
+
+/**
+ * Honesty checks for an AI-written cover letter: no numbers that aren't in the master resume,
+ * and no job-posting skills the owner hasn't confirmed. Returns a list of problems (empty = fine).
+ */
+export function checkLetter(master, paragraphs, gapKeywords = []) {
+  const problems = [];
+  if (!Array.isArray(paragraphs) || !paragraphs.filter((p) => typeof p === 'string' && p.trim()).length) return ['an empty cover letter'];
+  const text = paragraphs.join(' ');
+  const extra = numbersNotIn(text, master);
+  if (extra.length) problems.push(`numbers in the cover letter that aren't in your main resume: ${extra.join(', ')}`);
+  const masterText = norm(JSON.stringify(stripContact(master)));
+  const t = norm(text);
+  const leaked = gapKeywords.filter((k) => norm(k).length > 2 && !masterText.includes(norm(k)) && t.includes(norm(k)));
+  if (leaked.length) problems.push(`skills in the cover letter you haven't confirmed: ${leaked.join(', ')}`);
+  return problems;
+}
