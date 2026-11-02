@@ -148,11 +148,12 @@ STRICT RULES
 - You may reorder, emphasize and reword. Reword naturally in the candidate's voice; do not copy sentences from the job posting.
 - Aim for a natural keyword match of about 70-75% of the important job keywords. Do not stuff keywords.
 - Skill items must already be in the resume (you may regroup, rename groups and reorder). Do not add a skill just because the job asks for it.
-- experience: one entry per RESUME job, same order, 2-4 bullets each (reorder and reword the existing bullets; most relevant first).
-- projects: one entry per RESUME project, same order.
+- The resume must fit on ONE US Letter page, so keep it tight.
+- experience: one entry per RESUME job, same order, 2-3 bullets each (reorder and reword the existing bullets; most relevant first). Keep each bullet to one line, about 15-20 words.
+- projects: one entry per RESUME project, same order, 2-3 bullets each, one line each.
 - certifications: names exactly as in the RESUME, most relevant first; you may leave out irrelevant ones (keep at least 3).
 - keywords: list the 25-35 most important keywords/skills from the job posting. "matched" = ones the tailored resume genuinely shows. "missing" = ones it does not; set askUser=true only for skills or tools the candidate could plausibly have used but the resume doesn't mention (e.g. a software tool), and false for things like years of experience, industry background or degrees.
-- summary: 3-4 sentences, no first person, keep it truthful and specific.
+- summary: 2-3 sentences (at most 55 words), no first person, keep it truthful and specific.
 ${feedback ? `\nIMPORTANT: ${feedback}\n` : ''}
 JOB TITLE: ${jobTitle || '(not given)'}
 COMPANY: ${company || '(not given)'}

@@ -4,7 +4,7 @@
 
 import master from '../../src/data/resume-master.json' with { type: 'json' };
 import { assembleTailored } from '../../scripts/resume-checks.mjs';
-import { renderPdf, renderDocx } from '../../scripts/resume-render.mjs';
+import { renderDocx, fitOnePage } from '../../scripts/resume-render.mjs';
 import { isSignedIn } from '../../scripts/tailor-auth.mjs';
 
 const env = (k) => (globalThis.Netlify?.env?.get(k) ?? process.env[k]) || '';
@@ -32,7 +32,10 @@ export default async (req) => {
 
   const slug = String(body.company || 'Tailored').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'Tailored';
   const base = `${master.name.replace(/\s+/g, '-')}-Resume-${slug}`;
-  const [pdf, docx] = await Promise.all([renderPdf(resume), renderDocx(resume)]);
+  // Both files are kept to one page (see fitOnePage).
+  const fit = await fitOnePage(resume);
+  const pdf = fit.pdf;
+  const docx = await renderDocx(fit.resume, fit.size);
   return json({
     ok: true,
     files: [

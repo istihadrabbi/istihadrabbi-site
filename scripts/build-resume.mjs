@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import YAML from 'yaml';
-import { renderPdf, renderDocx, fileBase, forFiles } from './resume-render.mjs';
+import { renderPdf, renderDocx, fileBase, forFiles, pdfPages } from './resume-render.mjs';
 import { numbersNotIn } from './resume-checks.mjs';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
@@ -32,7 +32,10 @@ if (tailored) {
   }
 }
 
-fs.writeFileSync(path.join(outDir, `${base}.pdf`), await renderPdf(r));
+const pdf = await renderPdf(r);
+// The resume should stay on one page. Warn (don't trim) if an edit to resume.yaml makes it longer.
+if (pdfPages(pdf) > 1) console.warn(`Warning: the resume PDF is ${pdfPages(pdf)} pages. Shorten resume.yaml to keep it on one page.`);
+fs.writeFileSync(path.join(outDir, `${base}.pdf`), pdf);
 fs.writeFileSync(path.join(outDir, `${base}.docx`), await renderDocx(r));
 // Expose file names to the site, and the master resume to the private tailor page (master build only).
 if (!tailored) {

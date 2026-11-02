@@ -28,7 +28,7 @@ function helpers(r) {
 }
 
 // ---------- PDF ----------
-export function renderPdf(input) {
+export function renderPdf(input, opts = {}) {
   const r = forFiles(input);
   const { contact, dates } = helpers(r);
   return new Promise((resolve, reject) => {
@@ -60,7 +60,7 @@ export function renderPdf(input) {
     doc.moveDown(0.25);
     doc.fillColor(ink);
   };
-  const FS = 9.5, LG = 0.4; // body font size and line gap, tuned so the resume fits on one page
+  const FS = opts.fs || 9.5, LG = 0.4; // body font size and line gap, tuned so the resume fits on one page
   const body = (t, opts = {}) => doc.font('Helvetica').fontSize(FS).fillColor(ink).text(t, { lineGap: LG, ...opts });
   const bottom = () => doc.page.height - doc.page.margins.bottom;
   const ensure = (h) => { if (doc.y + h > bottom()) { doc.addPage(); } };
@@ -134,12 +134,12 @@ export function renderPdf(input) {
 }
 
 // ---------- DOCX ----------
-export async function renderDocx(input) {
+export async function renderDocx(input, opts = {}) {
   const r = forFiles(input);
   const { contact, dates } = helpers(r);
   const FONT = 'Calibri';
   const ACC = '1F3A5F';
-  const SZ = 19; // body size in half-points (9.5pt Calibri), tuned so the resume fits on one page
+  const SZ = opts.sz || 19; // body size in half-points (9.5pt Calibri), tuned so the resume fits on one page
   const run = (text, o = {}) => new TextRun({ text, font: FONT, size: SZ, ...o });
   const RIGHT = 10080; // right tab at text width (8.5in - 2*0.75in = 7in = 10080 twips)
   const H = (t) => new Paragraph({
@@ -203,3 +203,27 @@ export async function renderDocx(input) {
   return Packer.toBuffer(doc);
 }
 
+
+// Number of pages in a PDF made by renderPdf.
+export const pdfPages = (buf) => (buf.toString('latin1').match(/\/Type \/Page\b(?!s)/g) || []).length;
+
+// Makes a resume fit on one page, for the tailor page where bullet lengths vary.
+// Step 1: drop the least relevant bullet (the last one) from the entry with the most bullets,
+//         projects and older jobs first, keeping at least 2 bullets per entry.
+// Step 2: if it still doesn't fit, use a slightly smaller font.
+// The PDF is the measure; the Word file uses the same content and matching font size.
+export async function fitOnePage(input) {
+  const r = structuredClone(input);
+  const sizes = [{ fs: 9.5, sz: 19 }, { fs: 9, sz: 18 }];
+  const entries = () => [...[...(r.projects || [])].reverse(), ...[...(r.experience || [])].reverse()];
+  let pdf = await renderPdf(r, sizes[0]);
+  while (pdfPages(pdf) > 1) {
+    const longest = entries().reduce((a, e) => (e.bullets.length > (a?.bullets.length ?? 2) ? e : a), null);
+    if (!longest) break;
+    longest.bullets.pop();
+    pdf = await renderPdf(r, sizes[0]);
+  }
+  let size = sizes[0];
+  if (pdfPages(pdf) > 1) { size = sizes[1]; pdf = await renderPdf(r, size); }
+  return { resume: r, pdf, size };
+}
