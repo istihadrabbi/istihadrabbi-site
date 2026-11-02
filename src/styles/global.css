@@ -12,7 +12,8 @@
   --brand-2-soft: #eaf1ff; /* light tint of second color */
   --brand-line: #c7cbfb;   /* border in primary family */
   --hero-bg: #f5f6ff;      /* hero section background */
-  --dark: #1e1b4b;         /* contact section and footer background */
+  --dark: #1e1b4b;         /* footer background */
+  --contact-bg: var(--brand); /* contact section: same color as the Download Resume button */
   --brand-ink: #ffffff;
   --good: var(--brand-2);
   --radius: 14px;
